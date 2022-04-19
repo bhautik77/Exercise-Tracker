@@ -63,6 +63,29 @@ app.get("/api/users", function (req, res) {
   });
 });
 
+app.post("/api/users/:_id/exercises", function (req, res) {
+  User.findById(req.params._id, function (err, user) {
+    var date;
+    if (req.body.date == undefined || req.body.date == "")
+      date = new Date();
+    else
+      date = new Date(req.body.date);
+    const exercise = new Exercise({
+      _id: user._id,
+      username: user.username,
+      description: req.body.description,
+      duration: req.body.duration,
+      date: req.body.date.toDateString(),
+    });
+    exercise.save(function (err, data) {
+      if (err) return console.error(err);
+    });
+    Log.findById();
+    res.send({_id: exercise._id,username: exercise.username,description: exercise.description,duration: exercise.duration, date: exercise.date.toDateString()});
+  });
+  
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });

@@ -102,6 +102,9 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
+  if(req.query.from != undefined && req.query.from != undefined) {
+    
+  }
   Log.findById(req.params._id, function (err, data) {
     var loglist=[];
     for (var i=0; i < data.log.length ; i++) {
@@ -114,6 +117,9 @@ app.get("/api/users/:_id/logs", function (req, res) {
       log: loglist
     });
   });
+  req.query.from;
+  req.query.to;
+  req.query.limit;
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

@@ -110,15 +110,20 @@ app.get("/api/users/:_id/logs", function (req, res) {
     min = new Date(req.query.from);
     max = new Date(req.query.to);
   }
-
   Log.findById(req.params._id).exec(function (err, data) {
     var loglist = [];
-    for (var i = 0; i < data.log.length, i < limit, min <= new Date(data.log[i].date).toDateString(), max >= new Date(data.log[i].date).toDateString(); i++) {
-      loglist.push({
-        description: data.log[i].description,
-        duration: parseInt(data.log[i].duration),
-        date: new Date(data.log[i].date).toDateString(),
-      });
+    for (var i = 0; i < data.log.length, i < limit; i++) {
+      var date=new Date(data.log[i].date);
+      if (
+        min < date &&
+        max > date
+      ) {
+        loglist.push({
+          description: data.log[i].description,
+          duration: parseInt(data.log[i].duration),
+          date: date.toDateString(),
+        });
+      }
     }
     res.send({
       _id: data._id,

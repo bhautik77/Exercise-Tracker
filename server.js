@@ -102,12 +102,16 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
+  var query,min=new Date("1970-01-01"),max=new Date("");
   if(req.query.from != undefined && req.query.from != undefined) {
-    
+      min=new Date(req.query.from);
+      max=new Date(req.query.to);
+      query=Log.findById(req.params._id);
   }
-  Log.findById(req.params._id, function (err, data) {
+  
+  Log.findById(req.params._id).exec(function (err, data) {
     var loglist=[];
-    for (var i=0; i < data.log.length ; i++) {
+    for (var i=0; i < data.log.length, min < new Date(data.log[i].date).toDateString(), max > new Date(data.log[i].date).toDateString(); i++) {
       loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});
     }
     res.send({
@@ -117,9 +121,22 @@ app.get("/api/users/:_id/logs", function (req, res) {
       log: loglist
     });
   });
-  req.query.from;
-  req.query.to;
-  req.query.limit;
+  
+  // Log.findById(req.params._id, function (err, data) {
+  //   var loglist=[];
+  //   for (var i=0; i < data.log.length ; i++) {
+  //     loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});
+  //   }
+  //   res.send({
+  //     _id: data._id,
+  //     username: data.username,
+  //     count: data.count,
+  //     log: loglist
+  //   });
+  // });
+  // req.query.from;
+  // req.query.to;
+  // req.query.limit;
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

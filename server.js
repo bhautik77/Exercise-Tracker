@@ -123,20 +123,12 @@ app.get("/api/users/:_id/logs", function (req, res) {
         });
       }
     }
-    function sortByProperty(property) {
-      return function (a, b) {
-        if (a.property > b.property) return 1;
-        else if (a[property] < b[property]) return -1;
 
-        return 0;
-      };
-    }
-    
     res.send({
       _id: data._id,
       username: data.username,
       count: loglist.length,
-      log: loglist.sort(sortByProperty("date")),
+      log: loglist.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
     });
   });
 });

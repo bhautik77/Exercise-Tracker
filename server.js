@@ -95,19 +95,19 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
       _id: docs._id,
       username: docs.username,
       description: req.body.description,
-      duration: parseIntreq.body.duration),
+      duration: parseInt(req.body.duration),
       date: date.toDateString(),
     });
   });
 });
 
 app.get("/api/users/:_id/logs", function (req, res, done) {
-  User.findById(req.params._id, function (err, docs) {
-    Exercise.find({ username: docs.username }, function (err, docs) {
+  User.findById(req.params._id, function (err, user) {
+    Exercise.find({ username: user.username }, function (err, docs) {
       var exerciseList = new Array();
       for (let i = 0; i < docs.length; i++)
-        exerciseList.push({ description: docs[i].description, duration: docs[i].duration, date: docs[i].date });
-      res.json({count: docs.length,log: exerciseList});
+        exerciseList.push({ description: docs[i].description, duration: docs[i].duration, date: new Date(docs[i].date).toDateString() });
+      res.json({_id: user._id,username: user.username,count: docs.length,log: exerciseList});
     });
   });
 });

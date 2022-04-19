@@ -122,22 +122,32 @@ app.get("/api/users/:_id/logs", function (req, res) {
       log: loglist
     });
   });
+});
+
+app.get("/api/users/:_id/logs", function (req, res) {
+  var min=new Date("1970-01-01"),max=new Date("2070-12-12"),limit=0;
+  console.log(req.query.limit);
+  console.log(req.query.from);
+  console.log(req.query.to);
+  if(req.query.limit != undefined)
+    limit=req.query.limit;
+  if(req.query.from != undefined && req.query.from != undefined) {
+      min=new Date(req.query.from);
+      max=new Date(req.query.to);
+  }
   
-  // Log.findById(req.params._id, function (err, data) {
-  //   var loglist=[];
-  //   for (var i=0; i < data.log.length ; i++) {
-  //     loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});
-  //   }
-  //   res.send({
-  //     _id: data._id,
-  //     username: data.username,
-  //     count: data.count,
-  //     log: loglist
-  //   });
-  // });
-  // req.query.from;
-  // req.query.to;
-  // req.query.limit;
+  Log.findById(req.params._id).limit(limit).exec(function (err, data) {
+    var loglist=[];
+    for (var i=0; i < data.log.length, min < new Date(data.log[i].date).toDateString(), max > new Date(data.log[i].date).toDateString(); i++) {
+      loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});
+    }
+    res.send({
+      _id: data._id,
+      username: data.username,
+      count: data.count,
+      log: loglist
+    });
+  });
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

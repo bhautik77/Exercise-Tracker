@@ -128,7 +128,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
       _id: data._id,
       username: data.username,
       count: loglist.length,
-      log: loglist.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
+      log: loglist//.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
     });
   });
 });

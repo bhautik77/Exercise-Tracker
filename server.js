@@ -72,7 +72,7 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       _id: user._id,
       username: user.username,
       description: req.body.description,
-      duration: req.body.duration,
+      duration: parseInt(req.body.duration),
       date: date,
     });
     exercise.save(function (err, data) {
@@ -102,8 +102,13 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
-  Log.findById(req.body._id, function (err, data) {
-    res.json(data);
+  Log.findById(req.params._id, function (err, data) {
+    res.send({
+      _id: data._id,
+      username: data.username,
+      count: data.count,
+      log:""
+    });
   });
 });
 

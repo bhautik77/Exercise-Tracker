@@ -123,7 +123,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
   });
 });
 
-app.get("/api/users/:_id/logs", function (req, res, done) {
+app.get("/api/users/:_id/logs", function (req, res) {
   User.findById(req.params._id, function (err, user) {
     Log.findOne({ username: user.username }, function (err, docs) {
       // res.json({_id:user._id, username: docs.username, count: docs.count,log: docs.log });

@@ -60,8 +60,11 @@ app.post("/api/users", function (req, res, done) {
 
 app.get("/api/user", function (req, res, done) {
   User.find({}, function (err, docs) {
-    for i in 
-    res.json({ username: docs[3] });
+    // const result = JSON.parse(docs)
+    // .map(function ({ username: { username }, _id: { id } }) {
+    //     return { [username]: username, _id: id };
+    // })
+    res.json({ username: docs });
   });
 });
 

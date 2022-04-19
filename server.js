@@ -46,21 +46,22 @@ app.get("/", (req, res) => {
 
 app.post("/api/users", function (req, res, done) {
   const user = new User({
-    url: req.body.username,
+    username: req.body.username,
   });
-  User.save(function (err, data) {
+  user.save(function (err, data) {
     if (err) return console.error(err);
     return done(null, data);
   });
-  User.findOne({ username: req.params.username }, function (err, doc) {
+  User.findOne({ username: req.params.username }, function (err, docs) {
     if (err) return console.error(err);
-    res.json({ username: req.body.username, _id: doc._id });
+    res.json({ username: req.body.username, _id: docs.id });
   });
 });
 
 app.get("/api/user", function (req, res, done) {
   User.find({}, function (err, docs) {
-    res.json({ username: docs.username, id: docs._id });
+    for i in 
+    res.json({ username: docs[3] });
   });
 });
 

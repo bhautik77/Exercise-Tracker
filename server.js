@@ -91,6 +91,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
       if (err) return console.error(err);
       return done(null, data);
     });
+    const 
     res.send({
       _id: docs._id,
       username: docs.username,

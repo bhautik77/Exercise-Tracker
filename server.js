@@ -119,7 +119,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
         loglist.push({
           description: data.log[i].description,
           duration: parseInt(data.log[i].duration),
-          date: date.toDateString(),
+          date: data.log[i].date.toDateString(),
         });
       }
     }

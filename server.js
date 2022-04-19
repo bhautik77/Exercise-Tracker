@@ -66,24 +66,45 @@ app.get("/api/users", function (req, res) {
 app.post("/api/users/:_id/exercises", function (req, res) {
   User.findById(req.params._id, function (err, user) {
     var date;
-    if (req.body.date == undefined || req.body.date == "")
-      date = new Date();
-    else
-      date = new Date(req.body.date);
+    if (req.body.date == undefined || req.body.date == "") date = new Date();
+    else date = new Date(req.body.date);
     const exercise = new Exercise({
       _id: user._id,
       username: user.username,
       description: req.body.description,
       duration: req.body.duration,
-      date: req.body.date.toDateString(),
+      date: date,
     });
     exercise.save(function (err, data) {
       if (err) return console.error(err);
     });
-    Log.findById();
-    res.send({_id: exercise._id,username: exercise.username,description: exercise.description,duration: exercise.duration, date: exercise.date.toDateString()});
+    Log.findById(exercise._id, function (err, data) {
+      data.count = data.count + 1;
+      data.log.push({
+        _id: user._id,
+        description: req.body.description,
+        duration: req.body.duration,
+        date: date,
+      });
+      data.save(function (err, data) {
+        if (err) return console.error(err);
+      });
+    });
+
+    res.send({
+      _id: exercise._id,
+      username: exercise.username,
+      description: exercise.description,
+      duration: exercise.duration,
+      date: exercise.date.toDateString(),
+    });
   });
-  
+});
+
+app.get("/api/users/:_id/logs", function (req, res) {
+  Log.findById(req.body._id, function (err, data) {
+    res.json(data);
+  });
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

@@ -102,7 +102,6 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
     });
     Log.findOne({ username: docs.username }, function (err, log) {
       if (err) return console.error(err);
-      log._id= 
       log.count = log.count + 1;
       log.log.push({
         description: req.body.description,
@@ -127,7 +126,8 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
 app.get("/api/users/:_id/logs", function (req, res, done) {
   User.findById(req.params._id, function (err, user) {
     Log.findOne({ username: user.username }, function (err, docs) {
-      res.json(docs);
+      // res.json({_id:user._id, username: docs.username, count: docs.count,log: docs.log });
+      res.json({docs});
     });
   });
 });

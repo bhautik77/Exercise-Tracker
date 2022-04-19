@@ -17,15 +17,13 @@ const exerciseSchema = new Schema(
     description: String,
     duration: Number,
     date: Date,
-  },
-  { versionKey: false }
+  }
 );
 
 const userSchema = new Schema(
   {
     username: String,
-  },
-  { versionKey: false }
+  }
 );
 
 const logSchema = new Schema(
@@ -39,8 +37,7 @@ const logSchema = new Schema(
         date: Date,
       },
     ],
-  },
-  { versionKey: false }
+  }
 );
 
 let Exercise = mongoose.model("Exercise", exerciseSchema);
@@ -61,7 +58,9 @@ app.post("/api/users", function (req, res, done) {
     if (err) return console.error(err);
     return done(null, data);
   });
-  const log = new Log({
+  User.findOne({username: req.body.username}, function (err, docs) {
+    const log = new Log({
+    _id : ObjectId(docs._id),
     username: req.body.username,
     count: 0,
     log: [],
@@ -70,6 +69,8 @@ app.post("/api/users", function (req, res, done) {
     if (err) return console.error(err);
     return done(null, data);
   });
+  })
+  
   User.findOne({ username: req.params.username }, function (err, docs) {
     if (err) return console.error(err);
     res.json({ username: req.body.username, _id: docs.id });
@@ -91,6 +92,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
     if (req.body.date == "" || req.body.date == undefined) date = new Date();
     else date = new Date(req.body.date);
     const exercise = new Exercise({
+      _id : ObjectId(docs._id),
       username: docs.username,
       description: req.body.description,
       duration: req.body.duration,
@@ -113,9 +115,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
         return done(null, data);
       });
     });
-    res.json({
-      _id: docs._id,
-      username: docs.username,
+    res.json({docs,
       date: date.toDateString(),
       duration: parseInt(req.body.duration),
       description: req.body.description,

@@ -64,10 +64,10 @@ app.get("/api/user", function (req, res, done) {
     // .map(function ({ username: { username }, _id: { id } }) {
     //     return { [username]: username, _id: id };
     // })
-    var userList=new Array();
-    for (let i = 0; i < docs.length; i++)
-      userList.push({ username: docs[i].username, _id: docs[i]._id });
-    res.
+    // var userList=new Array();
+    // for (let i = 0; i < docs.length; i++)
+    //   userList.push({ username: docs[i].username, _id: docs[i]._id });
+    res.json(docs);
   });
 });
 

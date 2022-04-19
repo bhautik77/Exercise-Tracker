@@ -67,28 +67,30 @@ app.post("/api/users", function (req, res, done) {
   });
 });
 
-// app.get("/api/user", function (req, res, done) {
-//   User.find({})
-//     .select("-__v")
-//     .exec(function (err, docs) {
-//       res.json(docs.slice(3));
-//     });
-// });
-
 app.get("/api/users", function (req, res, done) {
   User.find({}, function (err, docs) {
-    // const result = JSON.parse(docs).map(function ({
-    //   username: { username },
-    //   _id: { id },
-    // }) {
-    //   return { [username]: username, _id: id };
-    // });
     var userList = new Array();
     for (let i = 0; i < docs.length; i++)
       userList.push({ username: docs[i].username, _id: docs[i]._id });
-    // console.log(userList);
     res.send(userList.slice(3));
   });
+});
+
+app.post("/api/users/:_id/exercises", function (req, res, done) {
+  User.findByID(req.body._id, function (err, docs) {
+      const exercise = new Exercise({
+    username: docs.username,
+        
+  });
+  user.save(function (err, data) {
+    if (err) return console.error(err);
+    return done(null, data);
+  });
+  });
+});
+
+app.get("/api/users/:_id/logs", function (req, res, done) {
+  
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

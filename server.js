@@ -103,11 +103,15 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 
 app.get("/api/users/:_id/logs", function (req, res) {
   Log.findById(req.params._id, function (err, data) {
+    var loglist=[];
+    for (var i=0; i < data.log.length ; i++) {
+      loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});
+    }
     res.send({
       _id: data._id,
       username: data.username,
       count: data.count,
-      log:""
+      log: loglist
     });
   });
 });

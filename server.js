@@ -72,24 +72,28 @@ app.get("/api/users", function (req, res, done) {
     var userList = new Array();
     for (let i = 0; i < docs.length; i++)
       userList.push({ username: docs[i].username, _id: docs[i]._id });
-    res.send(userList);
+    res.send(userList.slice(3));
   });
 });
 
 app.post("/api/users/:_id/exercises", function (req, res, done) {
-  User.findById(req.body._id, function (err, docs) {
+  // var id="625e6a8e6939e40dfd6e13de";
+  User.findById(req.param._id, function (err, docs) {
     var date;
-    if (req.body.date == null) date = new Date();
-    const exercise = new Exercise({
-      username: docs.username,
-      description: req.body.description,
-      duration: req.body.duration,
-      date: date.toDateString(),
-    });
-    exercise.save(function (err, data) {
-      if (err) return console.error(err);
-      return done(null, data);
-    });
+    if (req.body.date == null) 
+      date = new Date();
+    else 
+       date = new Date(req.body.date);
+    // const exercise = new Exercise({
+    //   username: docs.username,
+    //   description: req.body.description,
+    //   duration: req.body.duration,
+    //   date: date.toDateString(),
+    // });
+    // exercise.save(function (err, data) {
+    //   if (err) return console.error(err);
+    //   return done(null, data);
+    // });
     res.json({
       username: docs.username,
       description: req.body.description,

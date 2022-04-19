@@ -61,6 +61,15 @@ app.post("/api/users", function (req, res, done) {
     if (err) return console.error(err);
     return done(null, data);
   });
+  const log = new Log({
+    username: req.body.username,
+    count: 0,
+    log: [],
+  });
+  log.save(function (err, data) {
+    if (err) return console.error(err);
+    return done(null, data);
+  });
   User.findOne({ username: req.params.username }, function (err, docs) {
     if (err) return console.error(err);
     res.json({ username: req.body.username, _id: docs.id });
@@ -91,7 +100,18 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
       if (err) return console.error(err);
       return done(null, data);
     });
-    const 
+    Log.findOne({ username: docs.username }, function (err, log) {
+      log.count = log.count + 1;
+      log.log.push({
+        description: req.body.description,
+        duration: req.body.duration,
+        date: date.toDateString(),
+      });
+      log.save(function (err, data) {
+        if (err) return console.error(err);
+        return done(null, data);
+      });
+    });
     res.send({
       _id: docs._id,
       username: docs.username,
@@ -107,8 +127,17 @@ app.get("/api/users/:_id/logs", function (req, res, done) {
     Exercise.find({ username: user.username }, function (err, docs) {
       var exerciseList = new Array();
       for (let i = 0; i < docs.length; i++)
-        exerciseList.push({ description: docs[i].description, duration: docs[i].duration, date: new Date(docs[i].date).toDateString() });
-      res.json({_id: user._id,username: user.username,count: docs.length,log: exerciseList});
+        exerciseList.push({
+          description: docs[i].description,
+          duration: docs[i].duration,
+          date: new Date(docs[i].date).toDateString(),
+        });
+      res.json({
+        _id: user._id,
+        username: user.username,
+        count: docs.length,
+        log: exerciseList,
+      });
     });
   });
 });

@@ -59,17 +59,12 @@ app.post("/api/users", function (req, res, done) {
 });
 
 app.get("/api/user", function (req, res, done) {
-  User.find({}, function (err, docs) {
-    // const result = JSON.parse(docs)
-    // .map(function ({ username: { username }, _id: { id } }) {
-    //     return { [username]: username, _id: id };
-    // })
-    // var userList=new Array();
-    // for (let i = 0; i < docs.length; i++)
-    //   userList.push({ username: docs[i].username, _id: docs[i]._id });
+  User.find({}).select('-__v').exec(function (err, docs) {
     res.json(docs.slice(3,));
-  }).select('-__v');
+  });
 });
+
+
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);

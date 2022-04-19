@@ -112,32 +112,33 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
         return done(null, data);
       });
     });
-    res.send({
+    res.json({
       _id: docs._id,
       username: docs.username,
-      description: req.body.description,
-      duration: parseInt(req.body.duration),
       date: date.toDateString(),
+      duration: parseInt(req.body.duration),
+      description: req.body.description,
     });
   });
 });
 
 app.get("/api/users/:_id/logs", function (req, res, done) {
   User.findById(req.params._id, function (err, user) {
-    Exercise.find({ username: user.username }, function (err, docs) {
-      var exerciseList = new Array();
-      for (let i = 0; i < docs.length; i++)
-        exerciseList.push({
-          description: docs[i].description,
-          duration: docs[i].duration,
-          date: new Date(docs[i].date).toDateString(),
-        });
-      res.json({
-        _id: user._id,
-        username: user.username,
-        count: docs.length,
-        log: exerciseList,
-      });
+    Log.findOne({ username: user.username }, function (err, docs) {
+      res.json(docs);
+      // var exerciseList = new Array();
+      // for (let i = 0; i < docs.length; i++)
+      //   exerciseList.push({
+      //     description: docs[i].description,
+      //     duration: docs[i].duration,
+      //     date: new Date(docs[i].date).toDateString(),
+      //   });
+      // res.json({
+      //   _id: user._id,
+      //   username: user.username,
+      //   count: docs.length,
+      //   log: exerciseList,
+      // });
     });
   });
 });

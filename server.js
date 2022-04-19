@@ -77,23 +77,23 @@ app.get("/api/users", function (req, res, done) {
 });
 
 app.post("/api/users/:_id/exercises", function (req, res, done) {
-  // var id="625e6a8e6939e40dfd6e13de";
-  User.findById(req.param._id, function (err, docs) {
+  User.findById(req.params._id, function (err, docs) {
     var date;
-    if (req.body.date == null) 
+    console.log(req.body.date);
+    if (req.body.date == "") 
       date = new Date();
     else 
        date = new Date(req.body.date);
-    // const exercise = new Exercise({
-    //   username: docs.username,
-    //   description: req.body.description,
-    //   duration: req.body.duration,
-    //   date: date.toDateString(),
-    // });
-    // exercise.save(function (err, data) {
-    //   if (err) return console.error(err);
-    //   return done(null, data);
-    // });
+    const exercise = new Exercise({
+      username: docs.username,
+      description: req.body.description,
+      duration: req.body.duration,
+      date: date.toDateString(),
+    });
+    exercise.save(function (err, data) {
+      if (err) return console.error(err);
+      return done(null, data);
+    });
     res.json({
       username: docs.username,
       description: req.body.description,
@@ -103,7 +103,13 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
   });
 });
 
-app.get("/api/users/:_id/logs", function (req, res, done) {});
+app.get("/api/users/:_id/logs", function (req, res, done) {
+  User.findById(req.params._id, function (err, docs) {
+    Exercise.find({username: docs.username}, function (err, docs) {
+      
+    });
+  });
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);

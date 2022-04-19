@@ -112,23 +112,24 @@ app.get("/api/users/:_id/logs", function (req, res) {
   }
   Log.findById(req.params._id).exec(function (err, data) {
     var loglist = [];
-    for (var i = 0; i < data.log.length, i < limit; i++) {
+    for (var i = 0; i < data.log.length; i++) {
       var date=new Date(data.log[i].date);
       if (
         min < date &&
-        max > date
+        max > date &&
+        i < limit
       ) {
         loglist.push({
           description: data.log[i].description,
           duration: parseInt(data.log[i].duration),
-          date: date.toDateString(),
+          date: data.log[i].date.toDateString()
         });
       }
     }
     res.send({
       _id: data._id,
       username: data.username,
-      count: data.count,
+      count: loglist.length,
       log: loglist,
     });
   });

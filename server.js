@@ -113,24 +113,30 @@ app.get("/api/users/:_id/logs", function (req, res) {
   Log.findById(req.params._id).exec(function (err, data) {
     var loglist = [];
     for (var i = 0; i < data.log.length; i++) {
-      var date=new Date(data.log[i].date);
-      if (
-        min < date &&
-        max > date &&
-        i < limit
-      ) {
+      var date = new Date(data.log[i].date);
+
+      if (min < date && max > date && i < limit) {
         loglist.push({
           description: data.log[i].description,
           duration: parseInt(data.log[i].duration),
-          date: data.log[i].date.toDateString()
+          date: date.toDateString(),
         });
       }
     }
+    function sortByProperty(property) {
+      return function (a, b) {
+        if (a.property > b.property) return 1;
+        else if (a[property] < b[property]) return -1;
+
+        return 0;
+      };
+    }
+    
     res.send({
       _id: data._id,
       username: data.username,
       count: loglist.length,
-      log: loglist,
+      log: loglist.sort(sortByProperty("date")),
     });
   });
 });

@@ -58,9 +58,9 @@ app.post("/api/users", function (req, res, done) {
     if (err) return console.error(err);
     return done(null, data);
   });
-  User.findOne({username: req.body.username}, function (err, docs) {
+  // User.findOne({username: req.body.username}, function (err, docs) {
     const log = new Log({
-    _id : ObjectId(docs._id),
+    // _id : mongoose.ObjectId(docs._id),
     username: req.body.username,
     count: 0,
     log: [],
@@ -69,7 +69,7 @@ app.post("/api/users", function (req, res, done) {
     if (err) return console.error(err);
     return done(null, data);
   });
-  })
+  // })
   
   User.findOne({ username: req.params.username }, function (err, docs) {
     if (err) return console.error(err);
@@ -92,7 +92,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
     if (req.body.date == "" || req.body.date == undefined) date = new Date();
     else date = new Date(req.body.date);
     const exercise = new Exercise({
-      _id : ObjectId(docs._id),
+      _id : mongoose.ObjectId(docs._id),
       username: docs.username,
       description: req.body.description,
       duration: req.body.duration,

@@ -15,7 +15,7 @@ const exerciseSchema = new Schema({
   username: String,
   description: String,
   duration: Number,
-  date: Date
+  date: Date,
 });
 
 const userSchema = new Schema({
@@ -30,8 +30,8 @@ const logSchema = new Schema({
       description: String,
       duration: Number,
       date: Date,
-    }
-  ]
+    },
+  ],
 });
 
 let Exercise = mongoose.model("Exercise", exerciseSchema);
@@ -44,17 +44,24 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
+app.post("/api/users", function (req, res, done) {
+  const user = new User({
+    url: req.body.username,
+  });
+  User.save(function (err, data) {
+    if (err) return console.error(err);
+    return done(null, data);
+  });
+  User.findOne({ username: req.params.username }, function (err, doc) {
+    if (err) return console.error(err);
+    res.json({ username: req.body.username, _id: doc._id });
+  });
+});
 
-app.post("/api/users", function (req, res) {
-  const User = new User({
-        url: req.body.url.toString(),
-        short_url: randNumber,
-      });
-      url.save(function (err, data) {
-        if (err) return console.error(err);
-        return done(null, data);
-      });
-      res.json({ original_url: req.body.url, short_url: randNumber });
+app.get("/api/user", function (req, res, done) {
+  User.find({}, function (err, docs) {
+    res.json({ username: docs.username, id: docs._id });
+  });
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

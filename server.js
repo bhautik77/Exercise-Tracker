@@ -72,26 +72,34 @@ app.get("/api/users", function (req, res, done) {
     var userList = new Array();
     for (let i = 0; i < docs.length; i++)
       userList.push({ username: docs[i].username, _id: docs[i]._id });
-    res.send(userList.slice(3));
+    res.send(userList);
   });
 });
 
 app.post("/api/users/:_id/exercises", function (req, res, done) {
-  User.findByID(req.body._id, function (err, docs) {
-      const exercise = new Exercise({
-    username: docs.username,
-        
-  });
-  user.save(function (err, data) {
-    if (err) return console.error(err);
-    return done(null, data);
-  });
+  User.findById(req.body._id, function (err, docs) {
+    var date;
+    if (req.body.date == null) date = new Date();
+    const exercise = new Exercise({
+      username: docs.username,
+      description: req.body.description,
+      duration: req.body.duration,
+      date: date.toDateString(),
+    });
+    exercise.save(function (err, data) {
+      if (err) return console.error(err);
+      return done(null, data);
+    });
+    res.json({
+      username: docs.username,
+      description: req.body.description,
+      duration: req.body.duration,
+      date: date.toDateString(),
+    });
   });
 });
 
-app.get("/api/users/:_id/logs", function (req, res, done) {
-  
-});
+app.get("/api/users/:_id/logs", function (req, res, done) {});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);

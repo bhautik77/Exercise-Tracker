@@ -102,14 +102,15 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
-  var query,min=new Date("1970-01-01"),max=new Date("");
+  var min=new Date("1970-01-01"),max=new Date("2070-12-12"),limit=0;
+  if(req.query.limit != undefined)
+    limit=req.query.limit;
   if(req.query.from != undefined && req.query.from != undefined) {
       min=new Date(req.query.from);
       max=new Date(req.query.to);
-      query=Log.findById(req.params._id);
   }
   
-  Log.findById(req.params._id).exec(function (err, data) {
+  Log.findById(req.params._id).limit(limit).exec(function (err, data) {
     var loglist=[];
     for (var i=0; i < data.log.length, min < new Date(data.log[i].date).toDateString(), max > new Date(data.log[i].date).toDateString(); i++) {
       loglist.push({description:data.log[i].description,duration: parseInt(data.log[i].duration),date: new Date(data.log[i].date).toDateString()});

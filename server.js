@@ -79,8 +79,7 @@ app.get("/api/users", function (req, res, done) {
 app.post("/api/users/:_id/exercises", function (req, res, done) {
   User.findById(req.params._id, function (err, docs) {
     var date;
-    console.log(req.body.date);
-    if (req.body.date == "") date = new Date();
+    if (req.body.date == "" || req.body.date == undefined) date = new Date();
     else date = new Date(req.body.date);
     const exercise = new Exercise({
       username: docs.username,
@@ -92,10 +91,11 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
       if (err) return console.error(err);
       return done(null, data);
     });
-    res.json({
+    res.send({
+      _id: docs._id,
       username: docs.username,
       description: req.body.description,
-      duration: req.body.duration,
+      duration: parseIntreq.body.duration),
       date: date.toDateString(),
     });
   });

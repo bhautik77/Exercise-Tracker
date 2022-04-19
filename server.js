@@ -80,10 +80,8 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
   User.findById(req.params._id, function (err, docs) {
     var date;
     console.log(req.body.date);
-    if (req.body.date == "") 
-      date = new Date();
-    else 
-       date = new Date(req.body.date);
+    if (req.body.date == "") date = new Date();
+    else date = new Date(req.body.date);
     const exercise = new Exercise({
       username: docs.username,
       description: req.body.description,
@@ -105,8 +103,11 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
 
 app.get("/api/users/:_id/logs", function (req, res, done) {
   User.findById(req.params._id, function (err, docs) {
-    Exercise.find({username: docs.username}, function (err, docs) {
-      
+    Exercise.find({ username: docs.username }, function (err, docs) {
+      var exerciseList = new Array();
+      for (let i = 0; i < docs.length; i++)
+        exerciseList.push({ description: docs[i].description, duration: docs[i].duration, date: docs[i].date });
+      res.json({count: docs.length,log: exerciseList});
     });
   });
 });

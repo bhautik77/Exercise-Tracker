@@ -16,11 +16,11 @@ const exerciseSchema = new Schema({
   description: String,
   duration: Number,
   date: Date,
-});
+}, { versionKey: false });
 
 const userSchema = new Schema({
   username: String,
-});
+}, { versionKey: false });
 
 const logSchema = new Schema({
   username: String,
@@ -32,7 +32,7 @@ const logSchema = new Schema({
       date: Date,
     },
   ],
-});
+}, { versionKey: false });
 
 let Exercise = mongoose.model("Exercise", exerciseSchema);
 let User = mongoose.model("User", userSchema);
@@ -67,8 +67,8 @@ app.get("/api/user", function (req, res, done) {
     // var userList=new Array();
     // for (let i = 0; i < docs.length; i++)
     //   userList.push({ username: docs[i].username, _id: docs[i]._id });
-    res.json(docs);
-  });
+    res.json(docs.slice(3,));
+  }).select('-__v');
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

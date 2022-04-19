@@ -102,6 +102,7 @@ app.post("/api/users/:_id/exercises", function (req, res, done) {
     });
     Log.findOne({ username: docs.username }, function (err, log) {
       if (err) return console.error(err);
+      log._id= 
       log.count = log.count + 1;
       log.log.push({
         description: req.body.description,

@@ -129,7 +129,7 @@ console.log(`req.body: ${JSON.stringify(req.body)}`);
     res.send({
       _id: data._id,
       username: data.username,
-      count: loglist.length,
+      count: Math.min(limit,loglist.length),
       log: loglist.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1).slice(0,Math.min(limit,loglist.length)),
     });
   });

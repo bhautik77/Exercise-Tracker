@@ -116,8 +116,8 @@ console.log(`req.body: ${JSON.stringify(req.body)}`);
     var loglist = [];
     for (var i = 0; i < data.log.length; i++) {
       var date = new Date(data.log[i].date);
-
-      if (min < date && max > date && i < limit) {
+      console.log(i+" "+limit);
+      if (min < date && max > date) {
         loglist.push({
           description: data.log[i].description,
           duration: parseInt(data.log[i].duration),
@@ -130,7 +130,7 @@ console.log(`req.body: ${JSON.stringify(req.body)}`);
       _id: data._id,
       username: data.username,
       count: loglist.length,
-      log: loglist, //.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
+      log: loglist.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1).slice(0,Math.min(limit,loglist.length)),
     });
   });
 });

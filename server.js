@@ -106,10 +106,8 @@ app.get("/api/users/:_id/logs", function (req, res) {
     max = new Date("2070-12-12"),
     limit = 100000;
   if (req.query.limit != undefined) limit = req.query.limit;
-  if (req.query.from != undefined && req.query.from != undefined) {
-    min = new Date(req.query.from);
-    max = new Date(req.query.to);
-  }
+  if (req.query.to != undefined) max = new Date(req.query.to);
+  if (req.query.from != undefined) min = new Date(req.query.from);
   Log.findById(req.params._id).exec(function (err, data) {
     var loglist = [];
     for (var i = 0; i < data.log.length; i++) {
@@ -128,7 +126,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
       _id: data._id,
       username: data.username,
       count: loglist.length,
-      log: loglist//.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
+      log: loglist, //.sort((a, b) => new Date(a.date) > new Date(b.date) ? -1 : 1),
     });
   });
 });

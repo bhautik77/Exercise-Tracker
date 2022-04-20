@@ -102,6 +102,10 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
+console.log(`req.body: ${JSON.stringify(req.body)}`);
+  console.log(`req.params: ${JSON.stringify(req.params)}`);
+  console.log(`req.query: ${JSON.stringify(req.query)}`);
+
   var min = new Date("1970-01-01"),
     max = new Date("2070-12-12"),
     limit = 100000;
